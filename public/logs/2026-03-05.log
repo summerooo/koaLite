@@ -1,0 +1,5 @@
+{"level":30,"time":"2026-03-05T08:52:14.718Z","host":"127.0.0.1:1119","method":"GET","url":"/aa/black","query":{},"requestBody":{},"responseBody":{"blackblackblackblackblack":{},"b":{}},"status":200,"duration":21,"user":null,"msg":"request"}
+{"level":30,"time":"2026-03-05T08:54:41.172Z","host":"127.0.0.1:1119","method":"GET","url":"/aa/black","query":{},"requestBody":{},"responseBody":{"blackblackblackblackblack":{},"b":{}},"status":200,"duration":23,"user":null,"msg":"request"}
+{"level":30,"time":"2026-03-05T08:55:32.853Z","host":"127.0.0.1:1119","method":"GET","url":"/aa/black","query":{},"requestBody":{},"responseBody":{"blackblackblackblackblack":{},"b":{}},"status":200,"duration":22,"user":null,"msg":"request"}
+{"level":30,"time":"2026-03-05T08:57:51.932Z","host":"127.0.0.1:1117","method":"GET","url":"/aa/red","query":{},"requestBody":{},"responseBody":"","status":405,"duration":5,"user":null,"msg":"request"}
+{"level":30,"time":"2026-03-05T08:57:52.020Z","host":"127.0.0.1:1117","method":"GET","url":"/favicon.ico","query":{},"requestBody":{},"responseBody":"","status":404,"duration":1,"user":null,"msg":"request"}

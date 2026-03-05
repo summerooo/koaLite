@@ -1,4 +1,4 @@
-const router = require('koa-router')() //引入路由函数
+const Router = require('koa-router'); const router = new Router(); // 引入路由函数并实例化
 const swaggerJSDoc = require('swagger-jsdoc')
 const path = require('path')
 
