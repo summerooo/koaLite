@@ -1,4 +1,4 @@
-// require('dotenv').config(); // dotenv loading removed as env vars defaulted
+require('dotenv').config(); // load env variables
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
@@ -50,7 +50,10 @@ app.use(compress());
 app.use(cors({
   origin: (ctx) => {
     if (ctx.url === '/test') return '*';
-    return process.env.CORS_ORIGIN || 'http://localhost:9527';
+    const isProd = process.env.NODE_ENV === 'production';
+    const devOrigin = process.env.CORS_ORIGIN_DEV || 'http://localhost:9527';
+    const prodOrigin = process.env.CORS_ORIGIN_PROD || devOrigin;
+    return isProd ? prodOrigin : devOrigin;
   },
   exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
   maxAge: 5,
@@ -77,6 +80,7 @@ if (process.env.NODE_ENV !== 'production') {
 // 设置服务目录
 app.use(staticServer(path.join(__dirname)))
 // 自动匹配status
+app.use(router.routes())
 app.use(router.allowedMethods())
 // 设置接口
 app.use(relativeRouter(__dirname))
@@ -87,7 +91,7 @@ app.use(relativeRouter(__dirname))
 const startServer = (listenPort) => {
   const server = app.listen(listenPort, url);
   server.on('listening', () => {
-    console.log(`http://${url}:${listenPort}`);
+    console.log(`Server listening at http://${url}:${listenPort}`);
     if (process.env.NODE_ENV !== 'production') {
       console.log(`Swagger UI: http://${url}:${listenPort}/swagger`);
     }

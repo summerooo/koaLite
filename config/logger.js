@@ -36,6 +36,11 @@ const logger = pino(
  * Koa 中间件 - 记录请求、响应、错误以及耗时
  * 使用 pino 统一打印到控制台并写入日常日志文件（每天一个文件）
  */
+/**
+ * Request/response logging middleware.
+ * Exported as a function for Koa use, and also expose the pino instance
+ * via `module.exports.logger` for internal logging.
+ */
 module.exports = async (ctx, next) => {
   const start = Date.now()
   const { method, url, host } = ctx.request
