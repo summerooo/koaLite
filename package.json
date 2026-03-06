@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "koa2-swagger-ui": "^5.7.0",
+    "nodemon": "^3.1.14",
     "pm2": "^5.4.0",
     "swagger-jsdoc": "^6.2.8"
   }
