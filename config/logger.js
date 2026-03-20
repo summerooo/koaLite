@@ -54,7 +54,14 @@ module.exports = async (ctx, next) => {
     const requestBody = ctx.request.body || {}
 
     // 响应信息
-    const responseBody = typeof ctx.body === 'object' ? ctx.body : String(ctx.body || '')
+    let responseBody
+    if (ctx.body && typeof ctx.body.pipe === 'function') {
+      responseBody = '[Stream]'
+    } else if (typeof ctx.body === 'object') {
+      responseBody = ctx.body
+    } else {
+      responseBody = String(ctx.body || '')
+    }
 
     const userInfo = ctx.state.user
       ? { id: ctx.state.user.id, username: ctx.state.user.username }
