@@ -1,3 +1,6 @@
-var mongoose = require('mongoose')
-// var db = mongoose.createConnection('localhost', 'test')
-var db = mongoose.connect("mongodb://127.0.0.1:27017/test")
+const mongoose = require('mongoose');
+const env = require('./env');
+
+mongoose.connect(env.MONGODB_URI);
+
+module.exports = mongoose;

@@ -1,6 +1,7 @@
 // logger.js - 使用 pino 统一记录请求和错误日志
 const path = require('path')
 const pino = require('pino')
+const env = require('./env')
 
 // 日志目录（位于 public/logs）
 const logsDir = path.join(__dirname, '../public/logs')
@@ -25,7 +26,7 @@ function createPinoDestination() {
 // 创建 pino 实例（可在整个项目中复用）
 const logger = pino(
   {
-    level: process.env.LOG_LEVEL || 'info',
+    level: env.LOG_LEVEL,
     base: null, // 去掉 pid, hostname 等默认字段，保持日志简洁
     timestamp: pino.stdTimeFunctions.isoTime,
   },

@@ -1,9 +1,9 @@
 const fs = require('fs');
 const Path = require('path');
 const Router = require('koa-router');
-const logger = require('pino')({ level: process.env.LOG_LEVEL || 'info' });
 
 const router = new Router()
+const routes = []
 module.exports = dir => {
   const relativePath = dir || Path.resolve(__dirname, '..')
   const files = fs.readdirSync(relativePath + '/api')
@@ -16,10 +16,12 @@ module.exports = dir => {
           let path = '/' + file.substr(0, file.length - 3) + '/' + method
           if (mapping.config && mapping.config[method]) router[way](path, mapping.config[method], mapping[way][method])
           else router[way](path, mapping[way][method])
-          logger.info({way, path});
+          routes.push({ method: way.toUpperCase(), path })
         }
       }
     }
   })
+  console.log('\nRegistered routes:')
+  console.table(routes)
   return router.routes()
 }
