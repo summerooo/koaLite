@@ -5,19 +5,19 @@
   "license": "MIT",
   "dependencies": {
     "@koa/cors": "^5.0.0",
-    "dotenv": "^16.0.0",
-    "helmet": "^8.1.0",
-    "koa": "^3.1.2",
+    "dotenv": "^17.4.2",
+    "helmet": "^8.2.0",
+    "koa": "^3.2.1",
     "koa-bodyparser": "^4.4.1",
-    "koa-compress": "^5.0.0",
+    "koa-compress": "^5.2.1",
     "koa-helmet": "^9.0.0",
     "koa-multer": "^1.0.2",
-    "koa-ratelimit": "^5.0.0",
+    "koa-ratelimit": "^6.0.0",
     "koa-router": "^14.0.0",
     "koa-static": "^5.0.0",
-    "mongoose": "^9.2.4",
-    "mysql2": "^3.9.0",
-    "pino": "^8.0.0"
+    "mongoose": "^9.7.0",
+    "mysql2": "^3.22.5",
+    "pino": "^10.3.1"
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon app.js",
@@ -26,7 +26,7 @@
   "devDependencies": {
     "koa2-swagger-ui": "^5.7.0",
     "nodemon": "^3.1.14",
-    "pm2": "^5.4.0",
-    "swagger-jsdoc": "^6.2.8"
+    "pm2": "^7.0.1",
+    "swagger-jsdoc": "^6.3.0"
   }
 }

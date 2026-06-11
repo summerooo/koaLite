@@ -1,52 +1,257 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <title>文件上传</title>
+  <title>KoaLite - 欢迎使用轻量级 Node 框架</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 600px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(to right, #4f46e5, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .welcome-text {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 30px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #fafafa;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .upload-area:hover, .upload-area.dragover {
+      border-color: var(--primary);
+      background: #f0f4ff;
+    }
+
+    .upload-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .file-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-info {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn:disabled {
+      background: var(--border);
+      cursor: not-allowed;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      text-align: left;
+      display: none;
+      word-break: break-all;
+    }
+
+    .result.success {
+      display: block;
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .result.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    .api-link {
+      margin-top: 25px;
+      display: inline-block;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .api-link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <input type="file" name="upfile" id="upfile" value="" />
-    <input type="button" value="上传" id="btn" />
-  </body>
+  <div class="container">
+    <div class="logo">🚀 KoaLite</div>
+    <p class="welcome-text">欢迎使用 KoaLite！这是一个基于 Koa.js 搭建的精简、快速的服务端模板。下方提供了一个文件上传的示例，以供您快速体验服务端的 API 交互。</p>
+    
+    <div class="upload-area" id="dropzone">
+      <div class="upload-icon">📁</div>
+      <p>点击选择文件 或 将文件拖拽到此处</p>
+      <input type="file" id="upfile" class="file-input" />
+      <div class="file-info" id="file-name">未选择任何文件</div>
+    </div>
+    
+    <button class="btn" id="btn" disabled>开始上传</button>
+    
+    <div class="result" id="result-box"></div>
+
+    <a href="/swagger" target="_blank" class="api-link">📚 查看 Swagger API 接口文档 &rarr;</a>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script>
+    const $fileInput = $('#upfile');
+    const $fileName = $('#file-name');
+    const $uploadBtn = $('#btn');
+    const $resultBox = $('#result-box');
+    const $dropzone = $('#dropzone');
+
+    // 动态获取当前服务器的主机地址
+    const getBaseUrl = () => {
+      return window.location.origin;
+    };
+
+    // 文件选择变更
+    $fileInput.on('change', function() {
+      const file = this.files[0];
+      if (file) {
+        $fileName.text(`已选择: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`);
+        $uploadBtn.prop('disabled', false);
+      } else {
+        $fileName.text('未选择任何文件');
+        $uploadBtn.prop('disabled', true);
+      }
+    });
+
+    // 拖拽效果
+    $dropzone.on('dragover', function(e) {
+      e.preventDefault();
+      $(this).addClass('dragover');
+    });
+
+    $dropzone.on('dragleave drop', function(e) {
+      e.preventDefault();
+      $(this).removeClass('dragover');
+    });
+
+    // 处理上传
+    $uploadBtn.click(function() {
+      const file = $fileInput[0].files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      $uploadBtn.text('正在上传...').prop('disabled', true);
+      $resultBox.removeClass('success error').hide();
+
+      const uploadUrl = `${getBaseUrl()}/upload/saveFile`;
+
+      fetch(uploadUrl, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP 错误！状态码: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        $resultBox.addClass('success')
+          .html(`<strong>上传成功！</strong><br>文件路径: <a href="${data.url || data.data || '#'}" target="_blank">${data.url || data.data || '查看文件'}</a>`)
+          .show();
+      })
+      .catch(error => {
+        $resultBox.addClass('error')
+          .text(`上传失败: ${error.message}`)
+          .show();
+      })
+      .finally(() => {
+        $uploadBtn.text('开始上传').prop('disabled', false);
+      });
+    });
+  </script>
+</body>
 </html>
-<script>
-  $('#btn').click(function() {
-    var formData = new FormData()
-    formData.append('file', document.getElementById('upfile').files[0])
-
-    fetch('http://101.43.136.9:1116/upload/saveFile', {
-      method: 'POST',
-      headers: {
-        // 'Cache-Control': 'no-cache',
-        // 'Content-Type': 'text/plain',
-        // 'processData': false,
-        // 'Content-Type': 'multipart/form-data'
-      },
-      body: formData,
-      // GET 不加参数 只有POST
-      // body: 'data =' + JSON.stringify({ username: '111', password: '222' })
-    }).then(r => {
-      console.log(r)
-      return r.json()
-    }).then(data => {
-      console.log(data)
-    }).catch()
-  })
-  fetch('http://101.43.136.9:1116/bb/pp', {
-    method: 'POST',
-    headers: {
-      'Cache-Control': 'no-cache',
-      'Content-Type': 'text/plain'
-    },
-    // GET 不加参数 只有POST
-    body: 'data =' + JSON.stringify({ username: '111', password: '222'})
-  }).then((r)=>{
-    console.log(r)
-    return r.json()
-  }).then((data)=>{
-    console.log(data)
-  }).catch()
-
-</script>
